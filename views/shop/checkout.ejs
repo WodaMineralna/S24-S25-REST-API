@@ -1,0 +1,99 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/checkout.css">
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+        <main>
+            <div class="grid">
+                <section class="card">
+                  <div class="card-header">
+                    <h2 class="card-title">Shipping details</h2>
+                    <p class="card-subtitle"></p>
+                  </div>
+                  <div class="card-body">
+                    <div class="form-grid">
+                      <p class="card-subtitle">CURRENTLY UNAVAILABLE - Work in Progress...</p>
+                    </div>
+                  </div>
+                </section>
+       
+                <aside class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Order summary</h3>
+                  </div>
+                  <div class="card-body">
+                    <ul class="summary-list">
+                        <ul class="summary-list">
+                            <% let subtotal = 0; %>
+                            <% products.forEach(item => { %>
+                              <% 
+                                const price = item.productId.price * item.quantity;
+                                subtotal += price;
+                              %>
+                              <li class="summary-item">
+                                <img
+                                  class="summary-thumb"
+                                  src="/<%= item.productId.imageUrl %>"
+                                  alt="<%= item.productId.title %>"
+                                />
+                                <div class="summary-info">
+                                  <p class="summary-title"><%= item.productId.title %></p>
+                                  <p class="summary-meta">
+                                    <span>Quantity:</span>
+                                    <span class="qty-badge"><%= item.quantity %></span>
+                                  </p>
+                                </div>
+                                <div class="price">
+                                  $<%= price.toFixed(2) %>
+                                </div>
+                              </li>
+                            <% }); %>
+                          </ul>
+                      
+                    </ul>
+
+                    <% 
+                        const shipping = 4.99;
+                        const taxRate = 0.23;
+                        const tax = subtotal * taxRate;
+                        const total = subtotal + shipping + tax;
+                    %>
+
+                    <div class="totals">
+                        <div class="totals-row">
+                            <span class="totals-label">Subtotal</span>
+                            <span class="totals-value">$<%= subtotal.toFixed(2) %></span>
+                          </div>
+                          <div class="totals-row">
+                            <span class="totals-label">Shipping</span>
+                            <span class="totals-value">$<%= shipping.toFixed(2) %></span>
+                          </div>
+                          <div class="totals-row">
+                            <span class="totals-label">Tax (23%)</span>
+                            <span class="totals-value">$<%= tax.toFixed(2) %></span>
+                          </div>
+                          <div class="totals-row emph">
+                            <span class="totals-label">Total</span>
+                            <span class="totals-value">$<%= total.toFixed(2) %></span>
+                          </div>
+                    </div>
+                    <div class="coupon-row mt-2">
+                      <input class="input" placeholder="Coupon code - CURRENTLY UNAVAILABLE">
+                      <button class="btn btn-ghost" disabled>Apply</button>
+                    </div>
+                  </div>
+                  <div class="card-footer actions">
+                    <form action="/orders/create" method="POST">
+                      <button type="submit" class="btn btn-primary">Create Order</button>
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                  </form>
+                    <p class="checkout-note">Note: Real payment processing is not enabled in this demo. Payments will be implemented later after the <b>REST API refactor and a secure Stripe integration</b>. Clicking the "Create Order" button will only create a dummy order without processing an actual payment</p>
+                    <p class="checkout-note-2">I plan to make a proper deep dive into the Stripe docs soon :)</p>
+                  </div>
+                </aside>
+              </div>
+            </div>
+          </div>
+        </main>
+        <%- include('../includes/end.ejs') %>
