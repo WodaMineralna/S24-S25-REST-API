@@ -8,6 +8,7 @@ import csrfProtection from "./config/csrf.js";
 import flash from "./config/connect-flash.js";
 import routes from "./routes/index.js";
 
+import apiCors from "./middleware/cors.js";
 import attachUser from "./middleware/attachUser.js";
 import attachLocals from "./middleware/attachLocals.js";
 import * as errorController from "./controllers/error.js";
@@ -17,6 +18,8 @@ const __dirname = process.cwd();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
+app.use("/api", apiCors);
+app.use("/api", express.json());
 
 app.use(express.urlencoded({ extended: false }));
 app.use(multerConfig);
