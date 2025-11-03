@@ -22,10 +22,10 @@ productSchema.statics.fetchAll = async function (
 
   try {
     const totalProductsCount = await this.estimatedDocumentCount();
-    log(
-      "info",
-      `Currently on page ${page}, fetching max ${PRODUCTS_PER_PAGE} products, total products count: ${totalProductsCount}`
-    );
+    // log(
+    //   "info",
+    //   `Currently on page ${page}, fetching max ${PRODUCTS_PER_PAGE} products, total products count: ${totalProductsCount}`
+    // );
 
     const products = await this.find(filter ? { userId: filter } : {})
       .skip((page - 1) * PRODUCTS_PER_PAGE)
