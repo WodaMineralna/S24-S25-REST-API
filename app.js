@@ -7,6 +7,7 @@ import sessionMiddleware from "./config/session.js";
 import csrfProtection from "./config/csrf.js";
 import flash from "./config/connect-flash.js";
 import routes from "./routes/index.js";
+import apiRoutes from "./routes/api-index.js";
 
 import apiCors from "./middleware/cors.js";
 import attachUser from "./middleware/attachUser.js";
@@ -18,6 +19,7 @@ const __dirname = process.cwd();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
+
 app.use("/api", apiCors);
 app.use("/api", express.json());
 
@@ -35,6 +37,7 @@ app.use(attachUser); // ^ attaches user found by User.findById(req.session.user.
 app.use(attachLocals); // ^ automatically attaches res.locals.loggedIn && .csrfToken to currently rendered views
 
 app.use(routes);
+app.use("/api", apiRoutes);
 
 app.use(errorController.get404);
 app.use(errorController.getErrorPage);
