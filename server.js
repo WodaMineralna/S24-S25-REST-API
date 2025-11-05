@@ -7,6 +7,6 @@ const PORT = required("SERVER_PORT") || 3000;
 
 // ^ setting up MongoDB connection
 mongoConnect(() => {
-  console.log(`Listening on port ${PORT}`);
+  // console.log(`Listening on port ${PORT}`);
   app.listen(PORT);
 });
