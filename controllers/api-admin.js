@@ -12,6 +12,7 @@ export const apiGetProducts = async (req, res, next) => {
 
     const page = req.query.page || 1;
 
+    // * req.user._id will be deleted soon and JWT auth will be implemented
     const { products, paginationData } = await Product.fetchAll(
       page,
       PRODUCTS_PER_PAGE,
@@ -40,6 +41,64 @@ export const apiGetProductById = async (req, res, next) => {
     }
 
     return res.status(200).json({ ok: true, product });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const apiAddProduct = async (req, res, next) => {
+  try {
+    log("info", "Reached POST /api/admin/products"); // DEBUGGING
+    const { title, description, price } = req.body;
+    const imageUrl = req?.file.path;
+
+    const { didSucceed, details = PLACEHOLDER_DETAILS } =
+      await Product.addProduct({
+        title,
+        price,
+        description,
+        imageUrl,
+        userId: req.user._id,
+      });
+
+    // !
+    // TODO add `status` to return object (200 / 400-404)
+    if (!didSucceed) {
+      return res.status(400).json({ ok: false, details });
+    }
+
+    return res.status(201).json({ ok: true });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const apiEditProduct = async (req, res, next) => {
+  try {
+    log("info", "Reached PATCH /api/admin/products/:productId"); // DEBUGGING
+    const { title, price, description } = req.body;
+    const imageUrl = req.file
+      ? `images/${req.file.filename}`
+      : req.body.existingImageUrl;
+
+    const { didSucceed, details = PLACEHOLDER_DETAILS } =
+      await Product.editProductById(
+        id,
+        title,
+        price,
+        description,
+        imageUrl,
+        existingImageUrl,
+        req.user._id
+      );
+
+    // !
+    // TODO add `status` to return object (200 / 400-404)
+    if (!didSucceed) {
+      return res.status(400).json({ ok: false, details });
+    }
+
+    return res.status(200).json({ ok: true });
   } catch (error) {
     return next(error);
   }

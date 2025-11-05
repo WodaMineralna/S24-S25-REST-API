@@ -6,8 +6,13 @@ const router = express.Router();
 
 import isAuthed from "../middleware/isAuthed.js";
 import * as apiAdminController from "../controllers/api-admin.js";
-import { validateObjectId } from "../utils/validation.js";
+import {
+  validateObjectId,
+  validateAddProductForm,
+  validateEditProductForm,
+} from "../utils/validation.js";
 import apiHandleValidation from "../middleware/apiHandleValidation.js";
+import handleValidation from "../middleware/handleValidation.js";
 
 router.get("/products", isAuthed(), apiAdminController.apiGetProducts);
 
@@ -17,6 +22,20 @@ router.get(
   validateObjectId("productId"),
   apiHandleValidation(),
   apiAdminController.apiGetProductById
+);
+
+router.post(
+  "/products",
+  validateAddProductForm(),
+  handleValidation(),
+  apiAdminController.apiAddProduct
+);
+
+router.patch(
+  "/products/:productId",
+  validateEditProductForm("productId"),
+  apiHandleValidation(),
+  apiAdminController.apiEditProduct
 );
 
 router.delete(
