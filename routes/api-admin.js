@@ -28,14 +28,14 @@ router.post(
   "/products",
   validateAddProductForm(),
   handleValidation(),
-  apiAdminController.apiAddProduct
+  apiAdminController.apiCreateProduct
 );
 
 router.patch(
   "/products/:productId",
   validateEditProductForm("productId"),
   apiHandleValidation(),
-  apiAdminController.apiEditProduct
+  apiAdminController.apiUpdateProduct
 );
 
 router.delete(

@@ -46,7 +46,7 @@ export const apiGetProductById = async (req, res, next) => {
   }
 };
 
-export const apiAddProduct = async (req, res, next) => {
+export const apiCreateProduct = async (req, res, next) => {
   try {
     log("info", "Reached POST /api/admin/products"); // DEBUGGING
     const { title, description, price } = req.body;
@@ -73,7 +73,7 @@ export const apiAddProduct = async (req, res, next) => {
   }
 };
 
-export const apiEditProduct = async (req, res, next) => {
+export const apiUpdateProduct = async (req, res, next) => {
   try {
     log("info", "Reached PATCH /api/admin/products/:productId"); // DEBUGGING
     const { title, price, description } = req.body;
