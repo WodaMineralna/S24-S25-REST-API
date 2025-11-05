@@ -42,8 +42,6 @@ export default function handleValidation(viewPath, fixedLocals) {
       return res.redirect(viewPath);
     }
 
-    // console.log("'handleValidation.js' req.body:", req.body); // DEBUGGING
-
     return res.render(viewPath, {
       ...fixedLocals,
       errorMessage,

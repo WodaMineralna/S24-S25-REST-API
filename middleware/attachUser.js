@@ -20,7 +20,6 @@ export default catchErrAsync(async (req, res, next) => {
   }
 
   req.user = user;
-  // log("info", "User attached to session");
 
   return next();
 });

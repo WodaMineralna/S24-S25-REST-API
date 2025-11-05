@@ -17,6 +17,5 @@ export default () => {
     resave: false,
     saveUninitialized: false,
     store,
-    // cookie: {}
   });
 };
