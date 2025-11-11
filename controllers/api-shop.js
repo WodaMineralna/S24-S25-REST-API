@@ -100,3 +100,80 @@ export const apiRemoveFromCart = async (req, res, next) => {
     return next(error);
   }
 };
+
+export const apiGetOrders = async (req, res, next) => {
+  try {
+    log("info", "Reached GET /api/shop/orders"); // DEBUGGING
+
+    const orders = await req.user.getOrders();
+
+    return res.status(200).json({ ok: true, orders });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const apiCreateOrder = async (req, res, next) => {
+  try {
+    log("info", "Reached POST /api/shop/orders"); // DEBUGGING
+
+    const { didSucceed, details = PLACEHOLDER_DETAILS } =
+      await req.user.addOrder();
+
+    // TODO - add proper status codes
+    if (!didSucceed) {
+      return res.status(404).json({ ok: false, details });
+    }
+
+    return res.status(200).json({ ok: true, details });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const apiGetOrderById = async (req, res, next) => {
+  try {
+    log("info", "Reached GET /api/shop/orders/:orderId"); // DEBUGGING
+
+    const orderId = req.params.orderId;
+    const {
+      didSucceed,
+      details = PLACEHOLDER_DETAILS,
+      invoice,
+    } = await req.user.getInvoice(orderId, req.user._id);
+
+    // TODO - add proper status codes
+    if (!didSucceed) {
+      return res.status(404).json({ ok: false, details });
+    }
+    const doc = new PDFDocument();
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `inline; filename=${invoice.invoiceName}`
+    );
+
+    doc.pipe(res);
+    await fillInvoicePDF(doc, invoice);
+    doc.end();
+
+    doc.on("error", (err) => {
+      log(
+        "error",
+        `Stream error for invoice PDF "${invoiceName}": ${err.message}`
+      );
+      if (!res.headersSent) {
+        log("error", `Error streaming invoice PDF: ${err.message}`);
+        res
+          .status(500)
+          .json({
+            ok: false,
+            details: `Error streaming invoice PDF: ${err.message}`,
+          });
+      }
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
