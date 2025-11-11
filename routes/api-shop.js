@@ -37,4 +37,10 @@ router.delete(
   apiShopController.apiRemoveFromCart
 );
 
+router.get("/orders", isAuthed(), apiShopController.apiGetOrders);
+
+router.post("/orders", isAuthed(), apiShopController.apiCreateOrder);
+
+router.get("/orders/:orderId", isAuthed(), apiHandleValidation(), apiShopController.apiGetOrderById);
+
 export default router;
